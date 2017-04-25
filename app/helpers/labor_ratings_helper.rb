@@ -1,0 +1,2 @@
+module LaborRatingsHelper
+end

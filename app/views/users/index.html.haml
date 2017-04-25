@@ -1,0 +1,11 @@
+.container
+  %h1.page-header Listing users
+
+  - @users.each do |user|
+    .row
+      .col-md-2= avatar_for(user)
+      .col-md-2= display_user(user)
+      .col-md-2= link_to 'Show', "/users/#{user.id}"
+      -if user.id == current_user.id
+        %td= link_to 'Edit', edit_user_path(user)
+    $hr

@@ -1,0 +1,23 @@
+= form_for @link do |f|
+  - if @link.errors.any?
+    - @link.errors.full_messages.each do |msg|
+      %li= msg
+
+  = f.hidden_field :community_id, :value => params[:community_id]
+  = f.hidden_field :project_id, :value => params[:project_id]
+  = f.hidden_field :muster_id, :value => params[:muster_id]
+  
+  .row
+    .col-md-4= f.label :name
+    .col-md-4= f.text_field :name
+  
+  .row
+    .col-md-4= f.label :url
+    .col-md-4= f.text_field :url
+  
+  .row
+    .col-md-4= f.label :description
+    .col-md-4= f.text_area :description
+
+  .row
+    = f.submit 'Save'

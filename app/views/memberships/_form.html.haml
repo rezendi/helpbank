@@ -1,0 +1,27 @@
+= form_for [@community, @membership] do |f|
+  - if @membership.errors.any?
+    .row
+      #error_explanation
+        %h2= "#{pluralize(@membership.errors.count, "error")} prohibited this member from being saved:"
+        %ul
+          - @membership.errors.full_messages.each do |msg|
+            %li= msg
+
+  .row
+    .col-md-4= f.label :user
+    .col-md-4= f.select :user_id, User.all.map{|u|[u.to_s, u.id]}
+
+  .row
+    .col-md-4= f.label :role
+    .col-md-4= f.select :role_id, [["Applicant", Membership::APPLICANT], ["Member", Membership::MEMBER], ["Admin", Membership::ADMIN]]
+
+  .row
+    .col-md-4= f.label :application_info
+    .col-md-4= f.text_area :application_info
+
+  .row
+    .col-md-4= f.label :notes
+    .col-md-4= f.text_area :notes
+
+  .row
+    .col-md-4= f.submit 'Save'

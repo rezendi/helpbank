@@ -1,0 +1,29 @@
+-project_arg = @project ? "?project_id="+@project.id.to_s : ''
+.container
+  %h1.page-header Listing labors for #{@project ? @project.name+":" : @user.to_s} #{@muster ? " at "+@muster.to_s : ''}
+
+  - if @project
+    .row
+      .col-md-2.col-md-offset-10= link_to 'New Labor', new_labor_path+project_arg
+
+  .row
+    %b.col-md-2= @project ? "User" : "Project"
+    %b.col-md-2 Hours
+    %b.col-md-2 Status
+
+  - @labors.each do |labor|
+    .row
+      .col-md-2= @project ? display_user(labor.user) : labor.project.name
+      .col-md-2= labor.hours
+      .col-md-2= labor.string_for_status
+      .col-md-2
+        = link_to 'View', labor
+        |
+        - if current_user.id == labor.user_id or current_user.is_admin_of?(@project)
+          = link_to 'Edit', edit_labor_path(labor)
+          |
+          = link_to 'Destroy', labor_path(labor)+project_arg, :method => :delete, :data => { :confirm => 'Are you sure?' }
+        - else
+          = link_to "Rate", new_labor_rating_path(labor)
+
+

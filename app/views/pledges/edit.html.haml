@@ -1,0 +1,6 @@
+.container
+  %h1 Editing pledge to #{@project} by #{display_user(@pledge.user)}
+
+  = render 'form'
+  
+  = link_to 'Show', [@community, @project, @pledge]

@@ -1,0 +1,6 @@
+.container
+  %h1.page-header Editing membership of #{@membership.user} in #{@membership.community}
+
+  = render 'form'
+  
+  = link_to 'Show', [@community, @membership]

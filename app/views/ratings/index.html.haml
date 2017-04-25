@@ -1,0 +1,20 @@
+.container
+  %h1.page-header Listing ratings for labor by #{display_user(@labor.user)}
+
+  .row
+    .col-md-2.col-md-offset-10
+      Average: #{@labor.average_rating} stars
+  
+  .row
+    .col-md-2 Stars
+    .col-md-2 Status
+
+  - @ratings.each do |rating|
+    .row
+      .col-md-2= rating.stars_string
+      .col-md-2= rating.status
+      .col-md-2= rating.user_id
+      .col-md-2= link_to 'Show', [@labor, rating]
+      - if current_user.id == rating.user_id || current_user.is_admin_of?(@labor.project)
+        .col-md-2= link_to 'Edit', edit_labor_rating_path(@labor, rating)
+        .col-md-2= link_to 'Destroy', [@labor, rating], :method => :delete, :data => { :confirm => 'Are you sure?' }

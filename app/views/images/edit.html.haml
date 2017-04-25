@@ -1,0 +1,21 @@
+%h1 Editing image
+
+= form_for @image do |f|
+  - if @image.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@image.errors.count, "error")} prohibited this image from being saved:"
+      %ul
+        - @image.errors.full_messages.each do |msg|
+          %li= msg
+
+  %p= image_tag @image.file.url(:medium)
+  %p User #{@image.user}
+  %p Muster #{@image.muster}
+  = f.select :image_type, [["Submitted",0],["Approved",1],["Rejected",2]]
+  
+  .actions
+    = f.submit 'Save'
+
+= link_to 'Show', @image
+\|
+= link_to 'Back', images_path

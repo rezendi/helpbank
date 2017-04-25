@@ -1,0 +1,85 @@
+.col-sm-9.col-md-10.main
+  %h1.page-header= @project.name
+  .row.placeholders
+    .col-xs-6.col-sm-3
+      %h4 Objective
+      %p=@project.objective
+    .col-xs-6.col-sm-3
+      %h4 Call to Action
+      %span.text=@project.call_to_action
+    .col-xs-6.col-sm-3
+      %h4 Description
+      %span.text=@project.description
+    .col-xs-6.col-sm-3
+      %h4 Target Date
+      %span.text=@project.target_date
+  -if @project.is_private?
+    .row
+      .col-sm-12
+        %h4 This is a private project created by #{@project.creator}
+  %h2.sub-header Project links
+  .row
+    - @project.links.each do |link|
+      .col-sm-2
+        %span=link_to link.name, link.url
+  %h2.sub-header Project pictures
+  .row
+    - @project.approved_images.each do |image|
+      .col-sm-2
+        %span=image_tag image.file.url(:thumb)
+  -if current_user_admin_of?(@project)
+    %h2.sub-header Admin
+    .row
+      .col-xs-12.col-sm-6
+        %h4 Submitted work
+        %ul
+          - @project.submitted_labors.each do |labor|
+            %li= link_to labor, labor
+      .col-xs-12.col-sm-6
+        %h4 Submitted pictures
+        %ul
+          - @project.submitted_images.each do |image|
+            %li= link_to image_tag(image.file.url(:thumb)), edit_image_path(image)
+
+  %h2.sub-header Discussion
+  -if user_signed_in? && current_user.is_member_of?(@project)
+    .row#edit-row
+      .col-md-12
+        %h3#pre-form.sub-header=link_to "Start a new discussion", "javascript:reply_to('');"
+        %form{action: "/posts?project_id=#{@project.id}", method: "post", id:"edit-form", style:"#{@project.posts.empty? ? '' : 'display:none;'}"}
+          =hidden_field_tag :authenticity_token, form_authenticity_token
+          =hidden_field_tag "post[project_id]", @project.id
+          =hidden_field_tag "post[content]", '', id:"trix"
+          =hidden_field_tag "post[reply_to_post_id]", '', id:"reply_to_post_id"
+          %trix-editor{input:"trix"}
+          =submit_tag "Post"
+  
+  -for post in @project.root_posts
+    %hr
+    .row{id:"post-#{post.id}", name:"post-#{post.id}"}
+      %b.col-md-1.col-md-offset-1= post.user
+      .col-md-1= avatar_for(post.user)
+      .col-md-8!= post.content
+      -if user_signed_in? and current_user.id == post.user_id
+        .col-md-1= link_to "Delete", post, :method => :delete, :data => { :confirm => 'Are you sure?' }
+      -else
+        .col-md-1= link_to "Reply", "javascript:reply_to(#{post.id});"
+    -for reply in post.replies
+      .row{id:"post-#{reply.id}", name:"post-#{reply.id}"}
+        %b.col-md-1.col-md-offset-2= reply.user
+        .col-md-1= avatar_for(reply.user)
+        .col-md-7!= reply.content
+        -if user_signed_in? and current_user.id == reply.user_id
+          .col-md-1= link_to "Delete", reply, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+:javascript
+  var reply_to = function(post_id) {
+    $("#reply_to_post_id").val(post_id);
+    form = $("#edit-form").detach();
+    if (post_id == '') {
+      form.insertAfter("#pre-form");
+    } else {
+      form.insertAfter("#post-"+post_id);
+    }
+    $("#edit-form").show();
+  }

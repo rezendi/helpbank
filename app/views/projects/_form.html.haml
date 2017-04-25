@@ -1,0 +1,36 @@
+= form_for [@community, @project] do |f|
+  - if @project.errors.any?
+    .row
+      #error_explanation
+        %h2= "#{pluralize(@project.errors.count, "error")} prohibited this project from being saved:"
+        %ul
+          - @project.errors.full_messages.each do |msg|
+            %li= msg
+
+  =f.hidden_field :community_id, :value => @community.id
+  .row
+    .col-md-4= f.label :name
+    .col-md-4= f.text_field :name
+
+  -if current_user.is_admin_of?(@community) && current_user.can_create_private_project_for?(@community)
+    .col-md-4= f.label :project_type
+    .col-md-4= f.select :image_type, [["Community",Project::COMMUNITY_PROJECT],["Private",Project::PRIVATE_PROJECT]]
+
+  .row
+    .col-md-4= f.label :objective
+    .col-md-4= f.text_field :objective
+  .row
+    .col-md-4= f.label :call_to_action
+    .col-md-4= f.text_field :call_to_action
+  .row
+    .col-md-4= f.label :description
+    .col-md-4= f.text_area :description
+  .row
+    .col-md-4= f.label :target_date
+    .col-md-4= f.date_field :target_date
+  .row
+    .col-md-4= f.label :video_url
+    .col-md-4= f.text_field :video_url
+
+  .row
+    .col-md-4= f.submit 'Save'

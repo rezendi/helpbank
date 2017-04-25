@@ -1,0 +1,22 @@
+.container
+  .row
+    %b.col-md-4.col-md-4 Project
+    .col-md-4= @check_in.project
+  .row
+    %b.col-md-4.col-md-4 Muster:
+    .col-md-4= @check_in.muster_id
+  .row
+    %b.col-md-4 Type:
+    .col-md-4= @check_in.check_in_type
+  .row
+    %b.col-md-4 Location lat:
+    .col-md-4= @check_in.location_lat
+  .row
+    %b.col-md-4 Location lon:
+    .col-md-4= @check_in.location_lon
+  .row
+    %b.col-md-4 Location:
+    .col-md-4= @check_in.location
+  
+  .row
+    .col-md-4.col-md-offset-8= link_to 'Edit', edit_user_check_in_path(@user, @check_in)

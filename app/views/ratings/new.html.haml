@@ -1,0 +1,6 @@
+.container
+  %h1.page-header New rating
+
+  = render 'form'
+  
+  = link_to 'Back', @labor.muster ? [@labor.muster.project, @labor.muster] : labor_path(@labor)

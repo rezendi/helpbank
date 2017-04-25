@@ -1,0 +1,29 @@
+.container
+  .row
+    %b.col-md-4 Name:
+    .col-md-4= @link.name
+  .row
+    %b.col-md-4 URL:
+    .col-md-4= link_to @link.url, @link.url
+  .row
+    %b.col-md-4 Description:
+    .col-md-4= @link.description
+  -if @link.community
+    .row
+      %b.col-md-4 Community:
+      .col-md-4= @link.community
+  -if @link.project
+    .row
+      %b.col-md-4 Project:
+      .col-md-4= @link.project
+  -if @link.muster
+    .row
+      %b.col-md-4 Muster:
+      .col-md-4= @link.muster
+  -if @link.user
+    .row
+      %b.col-md-4 User:
+      .col-md-4= @link.user
+
+  - if current_user.id == @link.user_id or current_user.is_admin_of?(@link.community)
+    .col-md-4.col-md-offset-8= link_to 'Edit', edit_link_path(@link)

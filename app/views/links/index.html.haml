@@ -1,0 +1,22 @@
+.container
+  %h1.page-header #{@muster ? @muster : @project ? @project : @community ? @community :"Your"} links
+  .row
+    .col-md-2.col-md-offset-10= link_to 'New Link', new_link_path+@url_suffix
+  
+  .row
+    %b.col-md-2= @project ? "User" : "Project"
+    %b.col-md-2 Name
+    %b.col-md-2 URL
+
+  - @links.each do |link|
+    .row
+      .col-md-2= @link ? display_user(link.user) : link.project.name
+      .col-md-2= link.name
+      .col-md-2= link_to link.url, link.url
+      .col-md-2
+        = link_to 'View', link
+        |
+        - if current_user.id == link.user_id or current_user.is_admin_of?(@community)
+          = link_to 'Edit', edit_link_path(link)
+          |
+          = link_to 'Destroy', link, :method => :delete, :data => { :confirm => 'Are you sure?' }

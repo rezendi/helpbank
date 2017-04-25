@@ -1,0 +1,26 @@
+%h1 Listing projects for #{@community.name}
+
+%table
+  %thead
+    %tr
+      %th Name
+      %th Objective
+      %th
+      %th
+      %th
+
+  %tbody
+    - @projects.each do |project|
+      %tr
+        %td= project.name
+        %td= project.objective
+        %td= link_to 'Show', project
+        - if current_user.is_admin_of?(project)
+          %td= link_to 'Edit', edit_community_project_path(@community, project)
+          %td= link_to 'Destroy', [@community, project], :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+%br
+
+= link_to 'New Project', new_community_project_path(@communitity)
+|
+= link_to 'Community', @community

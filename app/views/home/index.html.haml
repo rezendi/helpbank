@@ -1,0 +1,33 @@
+.container
+  %h1.page-header The Help Bank
+
+  %ul
+    %li= link_to 'About', "/about"
+    -if current_user
+      %li= link_to "Invite a new user", new_user_invitation_path
+      -if current_user.communities.any?
+        %li= link_to "Check in", new_user_check_in_path(current_user)
+    -else
+      %li= link_to 'Sign up', new_user_registration_path
+
+  %h2.sub-header Communities and Projects
+
+  -muster_ids = user_signed_in? ? current_user.labors.map{|l|l.muster_id}.compact.uniq : []
+  %ul
+    -@communities.each do |community|
+      %li
+        = link_to community.name, community
+        - if user_signed_in? && current_user.is_member_of?(community)
+          %ul
+            -community.projects.each do |project|
+              %li
+                = link_to project, [community, project]
+                %ul
+                  -for muster in project.recent_musters_within(muster_ids)
+                    -if muster.has_unrated_labors(current_user)
+                      %li= link_to "Rate Labors: #{muster.location} #{muster.start_time}", labors_path+"?muster_id=#{muster.id}"
+
+  -if current_user
+    %hr
+    %p= link_to 'Create a New Community', new_community_path
+  

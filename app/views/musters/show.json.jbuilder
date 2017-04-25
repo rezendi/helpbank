@@ -1,0 +1,1 @@
+json.partial! "musters/muster", muster: @muster

@@ -1,0 +1,18 @@
+.container
+  %h1.page-header New check-in for #{@project ? @project.name : ''}
+
+  = render 'form'
+  
+
+:javascript
+  $(document).ready(function() {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        $("#check_in_location_lat").val(position.coords.latitude);
+        $("#check_in_location_lon").val(position.coords.longitude);
+        $("#check_in_line").remove();
+      });
+    } else {
+        $("#check_in_line").show();
+    }
+  });

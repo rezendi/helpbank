@@ -1,0 +1,21 @@
+.container
+  %h1.page-header Listing musters
+  
+  -if current_user.is_admin_of? @project
+    .row
+      .col-md-2.col-md-offset-10= link_to 'New Muster', new_community_project_muster_path(@community, @project)
+
+  .row
+    .col-md-2 Location
+    .col-md-2 Description
+    .col-md-2 Time
+
+  - @musters.each do |muster|
+    .row
+      .col-md-2= muster.location
+      .col-md-2= muster.description
+      .col-md-2= muster.start_time.to_s + " to " +muster.end_time.to_s
+      .col-md-2= link_to 'View', [@community, @project, muster]
+      -if current_user.is_admin_of? @project
+        .col-md-2= link_to 'Edit', edit_community_project_muster_path(@community, @project, muster)
+        .col-md-2= link_to 'Destroy', [@community, @project, muster], :method => :delete, :data => { :confirm => 'Are you sure?' }

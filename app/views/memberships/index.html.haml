@@ -1,0 +1,23 @@
+.container
+  %h1.page-header Members of #{@community.name}
+  
+  .row
+    %b.col-md-2
+    %b.col-md-2 Name
+    %b.col-md-2 Description
+    %b.col-md-2 Role
+  - @community.members_and_admins.each do |membership|
+    .row
+      .col-md-2= avatar_for(membership.user)
+      .col-md-2= display_user(membership.user)
+      .col-md-2= membership.user.description
+      .col-md-2= membership.description
+      .col-md-2
+        = link_to 'View', membership.user
+        -if current_user.is_admin_of? @community
+          |
+          = link_to 'Edit', edit_community_membership_path(@community, membership)
+          |
+          = link_to 'Remove', [@community, membership], :method => :delete, :data => { :confirm => 'Are you sure?' }
+    %hr
+  

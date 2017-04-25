@@ -1,0 +1,28 @@
+= form_for [@labor, @rating] do |f|
+  - if @rating.errors.any?
+    .row
+      #error_explanation
+        %h2= "#{pluralize(@rating.errors.count, "error")} prohibited this rating from being saved:"
+        %ul
+          - @rating.errors.full_messages.each do |msg|
+            %li= msg
+
+  - if !@rating.persisted? || current_user.id == @rating.user_id
+    .row
+      .col-md-4= f.label :rating
+      - options = [["*****",5],["****",4],["***",3],["**",2],["*",1]]
+      - selected_val = @rating.persisted? ? 5-@rating.stars : 2 #default to 3 stars
+      - selected = options.index{|b|b[1]==selected_val}
+      .col-md-4= f.select :stars, options_for_select(options, selected)
+
+  - if current_user.is_admin_of? @labor.project
+    .row
+      .col-md-4= f.label :status
+      .col-md-4= f.select :status, [["Unverified", 0], ["Verified", 1]]
+
+    .row
+      .col-md-4= f.label :notes
+      .col-md-4= f.text_area :notes
+
+  .row
+    .col-md-4= f.submit 'Save'

@@ -1,0 +1,37 @@
+= form_for @labor do |f|
+  - if @labor.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@labor.errors.count, "error")} prohibited this labor from being saved:"
+      %ul
+        - @labor.errors.full_messages.each do |msg|
+          %li= msg
+
+  = f.hidden_field :project_id, :value => @project.id
+
+  .row
+    .col-md-4= f.label :start_time
+    .col-md-4= f.datetime_field :start_time
+
+  .row
+    .col-md-4= f.label :hours
+    .col-md-4= f.number_field :hours
+
+  .row
+    .col-md-4= f.label :notes
+    .col-md-4= f.text_area :notes
+
+  - if current_user && (current_user.is_admin? || (@labor.project && @labor.project.community.admins.map{|m|m.user_id}.include?(current_user.id)))
+    .row
+      .col-md-4= f.label :status
+      .col-md-4= f.select :status, [["Unverified", 0], ["Verified", 1]]
+  
+    .row
+      .col-md-4= f.label :rating
+      - options = [["*****",5],["****",4],["***",3],["**",2],["*",1]]
+      - previous = current_user.ratings.where(labor_id:@labor.id)
+      - selected_val = previous.any? ? 5-previous.last.stars : 2 #default to 3 stars
+      - selected = options.index{|b|b[1]==selected_val}
+      .col-md-4= select_tag :rating, options_for_select(options, selected)
+
+  .row
+    .col-md-4= f.submit 'Save'

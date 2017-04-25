@@ -1,0 +1,17 @@
+%h1 The Help Bank
+
+-if @communities.any?
+  %h2 Communities
+  %ul
+    -@communities.each do |community|
+      %li= link_to community.name, community
+
+-if @projects.any?
+  %h2 Projects
+  %ul
+    -@projects.each do |project|
+      %li= link_to project, project
+
+%hr
+%p= link_to 'Create a New Community', new_community_path
+

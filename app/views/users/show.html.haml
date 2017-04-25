@@ -1,0 +1,83 @@
+.container
+  .row
+    %b.col-md-2 Name:
+    .col-md-10=display_user(@user)
+  
+  -if @user.id == current_user.id || current_user.is_admin?
+    .row
+      %b.col-md-2 Email:
+      .col-md-10=@user.email
+  
+  .row
+    %b.col-md-2 Description:
+    .col-md-10=@user.description
+  
+  - if @user.personal_images.any?
+    .row
+      %b.col-md-2 Avatar:
+      .col-md-10=image_tag @user.personal_images.first.file.url(:thumb)
+  
+  - if @user.id == current_user.id
+    .row
+      .col-md-2= link_to 'Edit', edit_user_path(@user)
+
+  %hr
+  .row
+    %b.col-md-2 Stars:
+    .col-md-10
+      - for community in @user.communities
+        .row
+          .col-md-6= community
+          .col-md-6= "current #{@user.stars_for(community)}"
+          .col-md-6= "total #{@user.membership_for(community).total_stars}"
+
+  %hr
+  .row
+    %b.col-md-2 Hours:
+    .col-md-10
+      - for community in @user.communities
+        .row
+          .col-md-6= community
+          .col-md-6= @user.hours_for(community)
+
+  %hr
+  .row
+    %b.col-md-2 Pledges:
+    .col-md-10
+      - for pledge in @user.pledges
+        .row
+          .col-md-3= pledge.project.community
+          .col-md-3= pledge.project
+          .col-md-3= pledge.hours
+  
+  %hr
+  .row
+    %b.col-md-2 Check-Ins:
+    .col-md-10
+      - for check_in in @user.check_ins
+        .row
+          .col-md-3= check_in.project.community
+          .col-md-3= check_in.project
+          .col-md-2= check_in.created_at
+          .col-md-2= check_in.muster
+          .col-md-2= check_in.location
+  
+  %hr
+  .row
+    %b.col-md-2 Labors:
+    .col-md-10
+      - for labor in @user.labors
+        .row
+          .col-md-3= pledge.project.community
+          .col-md-3= pledge.project
+          .col-md-3= labor.hours
+          .col-md-3= labor.average_rating
+
+  %hr
+  .row
+    %b.col-md-2 Pictures:
+    .col-md-10
+      - for image in @user.images
+        .row
+          .col-md-12= link_to image_tag(image.file.url(:medium)), image.file.url
+

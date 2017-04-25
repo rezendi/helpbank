@@ -1,0 +1,27 @@
+.container
+  %h1.page-header New image
+  
+  = form_for @image, url: images_path, html: { multipart: true, id: "dropzone-upload", class: "dropzone" }  do |f|
+    - if @image.errors.any?
+      - @image.errors.full_messages.each do |msg|
+        %li= msg
+  
+    = f.hidden_field :community_id, :value => params[:community_id]
+    = f.hidden_field :project_id, :value => params[:project_id]
+    = f.hidden_field :muster_id, :value => params[:muster_id]
+    = f.hidden_field :image_type, :value => params[:image_type]
+    
+    .fallback
+      .field
+        = f.label :image
+        = f.file_field :file
+      .actions
+        = f.submit 'Save'
+  
+  :javascript
+    $(document).ready(function() {
+      $("#dropzone-upload").dropzone();
+    });
+    $(document).on('page:load', function() {
+      $("#dropzone-upload").dropzone();
+    });

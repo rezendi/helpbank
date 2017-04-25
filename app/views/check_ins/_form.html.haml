@@ -1,0 +1,25 @@
+= form_for [@user, @check_in], url: user_check_ins_path do |f|
+  - if @check_in.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@check_in.errors.count, "error")} prohibited this check_in from being saved:"
+      %ul
+        - @check_in.errors.full_messages.each do |msg|
+          %li= msg
+
+  = f.hidden_field :location_lat
+  = f.hidden_field :location_lon
+  -if @project
+    = f.hidden_field :project_id, :value => @project.id
+  -else
+    .row
+      .col-md-4= f.label :project
+      .col-md-4= f.select :project_id, @user.projects.map{|p|[p.name, p.id]}
+  .row
+    .col-md-4= f.label :muster_id
+    .col-md-4= f.select :muster_id, @user.projects.map{|p|p.musters}.flatten.map{|m|["#{m.description} at #{m.location}", m.id]}
+  .row{:id => "check_in_line", :style => "display:none;"}
+    .col-md-4= f.label :location
+    .col-md-4= f.text_field :location
+  .row
+    .col-md-4= f.submit 'Save'
+

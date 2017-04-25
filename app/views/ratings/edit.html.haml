@@ -1,0 +1,8 @@
+.container
+  %h1.page-header Editing rating for #{@labor.user}'s work on #{@labor.project}
+
+  = render 'form'
+  
+  = link_to 'Show', [@labor, @rating]
+  \|
+  = link_to 'Back', labor_path(@labor)

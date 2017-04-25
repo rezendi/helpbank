@@ -1,0 +1,23 @@
+.container
+  %h1.page-header Check-ins for #{@user.to_s}
+
+  .row
+    .col-md-2 Project
+    .col-md-2 Muster
+    .col-md-2 Location
+    .col-md-2 Time
+    .col-md-2 Type
+    .col-md-2 Links
+    
+  - @check_ins.each do |check_in|
+    .row
+      .col-md-2= check_in.project
+      .col-md-2= check_in.muster
+      .col-md-2= check_in.location
+      .col-md-2= check_in.created_at
+      .col-md-2= check_in.check_in_type
+      .col-md-2
+        - if current_user.id == @user.id || current_user.is_admin_of?(check_in.project)
+          = link_to 'Show', user_check_in_path(@user, check_in)
+          = link_to 'Edit', edit_user_check_in_path(@user, check_in)
+          = link_to 'Destroy', user_check_in_path(@user, check_in), :method => :delete, :data => { :confirm => 'Are you sure?' }

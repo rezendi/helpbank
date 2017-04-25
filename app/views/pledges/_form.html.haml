@@ -1,0 +1,19 @@
+= form_for [@community, @project, @pledge] do |f|
+  - if @pledge.errors.any?
+    .row
+      #error_explanation
+        %h2= "#{pluralize(@pledge.errors.count, "error")} prohibited this pledge from being saved:"
+        %ul
+          - @pledge.errors.full_messages.each do |msg|
+            %li= msg
+
+  .row
+    .col-md-4= f.label :hours
+    .col-md-4= f.number_field :hours
+
+  .row
+    .col-md-4= f.label :notes
+    .col-md-4= f.text_area :notes
+
+  .row
+    .col-md-4= f.submit 'Save'

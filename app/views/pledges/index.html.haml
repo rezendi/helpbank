@@ -1,0 +1,20 @@
+.container
+  %h1.page-header Listing pledges for #{@project.name}
+  
+  .row
+    .col-md-2.col-md-offset-10= link_to 'New Pledge', new_community_project_pledge_path(@community, @project)
+  
+  .row
+    .col-md-2 User
+    .col-md-2 Hours
+    .col-md-2 Notes
+
+  - @pledges.each do |pledge|
+    .row
+      .col-md-2= display_user(pledge.user)
+      .col-md-2= pledge.hours
+      .col-md-2= pledge.notes
+      .col-md-2= link_to 'Show', [@community, @project, pledge]
+      -if current_user.id == pledge.user.id || current_user.is_admin_of?(@project)
+        .col-md-2= link_to 'Edit', edit_community_project_pledge_path(@community, @project, pledge)
+        .col-md-2= link_to 'Destroy', [@community, @project, pledge], :method => :delete, :data => { :confirm => 'Are you sure?' }

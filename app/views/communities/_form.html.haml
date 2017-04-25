@@ -1,0 +1,27 @@
+= form_for @community do |f|
+  - if @community.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@community.errors.count, "error")} prohibited this community from being saved:"
+      %ul
+        - @community.errors.full_messages.each do |msg|
+          %li= msg
+
+  .row
+    .col-md-4= f.label :name
+    .col-md-4= f.text_field :name
+
+  .row
+    .col-md-4= f.label :description
+    .col-md-4= f.text_area :description
+
+  .row
+    .col-md-4= f.label :approval_rules
+    - options = [["Approval Required", Community::APPROVAL_REQUIRED], ["Auto Approve Invitees", Community::AUTO_APPROVE_INVITEES], ["Auto Approve Applications", Community::AUTO_APPROVE]]
+    .col-md-4= f.select :community_type_id, options_for_select(options)
+
+  .row
+    .col-md-4= f.label "Stars to create a private project"
+    .col-md-4= f.number_field :stars_to_create_a_project
+
+  .row
+    .col-md-4.col-md-offset-4= f.submit 'Save'

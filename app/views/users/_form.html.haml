@@ -1,0 +1,46 @@
+= form_tag("/users/#{@user.id}", method:"put") do |f|
+  - if @user.errors.any?
+    .row
+      .col-md-12
+        #error_explanation
+          %h2= "#{pluralize(@user.errors.count, "error")} prohibited this user from being saved:"
+          %ul
+            - @user.errors.full_messages.each do |msg|
+              %li= msg
+
+  .row
+    .col-md-4= label_tag :name
+    .col-md-4= text_field_tag "user[name]", @user.name
+
+  .row
+    .col-md-4= label_tag :description
+    .col-md-4= text_area_tag "user[description]", @user.description
+
+  -if @user.persisted? && @user.images.any?
+    -image = @user.images.first
+    .row
+      .col-md-4= label_tag :avatar
+      .col-md-4= image_tag image.file.url
+      .col-md-4= link_to 'Destroy', image, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+  .row
+    .col-md-4.col-md-offset-4= submit_tag 'Save'
+
+-if @user.persisted? && @user.images.empty?
+  %h2.sub-header Please add an avatar image
+  = form_for @image, url: images_path, html: { multipart: true, id: "dropzone-upload", class: "dropzone" }  do |f|
+    - @image.errors.full_messages.each do |msg|
+      %li= msg
+    .fallback
+      .field
+        = f.label :image
+        = f.file_field :file
+      .actions
+        = f.submit 'Save'
+  :javascript
+    $(document).ready(function() {
+      $("#dropzone-upload").dropzone();
+    });
+    $(document).on('page:load', function() {
+      $("#dropzone-upload").dropzone();
+    });

@@ -1,0 +1,27 @@
+= form_for [@community, @project, @muster] do |f|
+  - if @muster.errors.any?
+    .row
+      #error_explanation
+        %h2= "#{pluralize(@muster.errors.count, "error")} prohibited this muster from being saved:"
+        %ul
+          - @muster.errors.full_messages.each do |msg|
+            %li= msg
+
+  .row
+    .col-md-4= f.label :location
+    .col-md-4= f.text_field :location
+
+  .row
+    .col-md-4= f.label :description
+    .col-md-4= f.text_area :description
+
+  .row
+    .col-md-4.col-md-4= f.label :start_time
+    .col-md-4.col-md-4= f.datetime_field :start_time
+
+  .row
+    .col-md-4= f.label :end_time
+    .col-md-4= f.datetime_field :end_time
+
+  .row
+    .col-md-4= f.submit 'Save'

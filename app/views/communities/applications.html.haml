@@ -1,0 +1,14 @@
+%h3 Pending Applications
+
+%ul
+-@pending.each do |membership|
+  %li
+    =membership.user
+    =link_to "View", community_membership_path(@community, membership)
+    =link_to "Approve", approve_community_path(@community)+"?membership_id=#{membership.id}", :method => :post
+
+%h3 Declined Applications
+%ul
+-@declined.each do |membership|
+  %li
+    =membership.user

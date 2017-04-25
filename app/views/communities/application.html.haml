@@ -1,0 +1,7 @@
+.container
+  %h3 Application to #{@community.name}
+  
+  = form_tag("/communities/#{@community.id}/apply", method: :post) do
+    = text_area_tag :application_info, "", {rows: 10, cols:60, :placeholder => "Tell the community something about yourself"}
+    %br
+    = submit_tag 'Apply'

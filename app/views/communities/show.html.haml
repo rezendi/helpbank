@@ -1,0 +1,85 @@
+
+.jumbotron
+  .container
+    %h1= @community.name
+    %p= @community.description
+    -if current_user_admin_of? @community
+      %p= link_to 'Edit', edit_community_path(@community)
+
+.container
+  .row
+    .col-md-4
+      %h2.sub-header Projects
+      - if @community.projects.empty?
+        %p None yet
+        -if user_signed_in? and current_user.is_admin_of?(@community)
+          =link_to "Create new project", new_community_project_path(@community)
+      - else
+        %ul
+          -@community.projects.each do |project|
+            %li= link_to project, community_project_path(@community, project)
+  
+    -if current_user_member_of? @community
+      .col-md-4
+        %h2.sub-header Members
+        %p
+          = @community.members_and_admins.count
+          = link_to "View", community_memberships_path(@community)
+        %p
+          = link_to "Invite a new member", "/users/invitation/new?community_id=#{@community.id}"
+    -else
+      .col-md-4
+        %h2.sub-header Apply for Membership
+        %p
+          = link_to "Apply", application_community_path(@community)
+  
+    -if current_user_admin_of? @community
+      .col-md-4
+        %h2.sub-header Applications
+        %p
+          = @community.pending_applications.count
+          = link_to "View", applications_community_path(@community)
+
+  %h2.sub-header Discussion
+  -if user_signed_in? && current_user.is_member_of?(@community)
+    .row#edit-row
+      .col-md-12
+        %h3#pre-form.sub-header=link_to "Start a new discussion", "javascript:reply_to('');"
+        %form{action: "/posts?community_id=#{@community.id}", method: "post", id:"edit-form", style:"#{@community.posts.empty? ? '' : 'display:none;'}"}
+          =hidden_field_tag :authenticity_token, form_authenticity_token
+          =hidden_field_tag "post[community_id]", @community.id
+          =hidden_field_tag "post[content]", '', id:"trix"
+          =hidden_field_tag "post[reply_to_post_id]", '', id:"reply_to_post_id"
+          %trix-editor{input:"trix"}
+          =submit_tag "Post"
+  
+  -for post in @community.root_posts
+    %hr
+    .row{id:"post-#{post.id}", name:"post-#{post.id}"}
+      %b.col-md-1.col-md-offset-1= post.user
+      .col-md-1= avatar_for(post.user)
+      .col-md-8!= post.content
+      -if user_signed_in?
+        -if current_user.id == post.user_id
+          .col-md-1= link_to "Delete", post, :method => :delete, :data => { :confirm => 'Are you sure?' }
+        -elsif current_user.is_member_of?(@community)
+          .col-md-1= link_to "Reply", "javascript:reply_to(#{post.id});"
+    -for reply in post.replies
+      .row{id:"post-#{reply.id}", name:"post-#{reply.id}"}
+        %b.col-md-1.col-md-offset-2= reply.user
+        .col-md-1= avatar_for(reply.user)
+        .col-md-7!= reply.content
+        -if user_signed_in? and current_user.id == reply.user_id
+          .col-md-1= link_to "Delete", reply, :method => :delete, :data => { :confirm => 'Are you sure?' }
+
+:javascript
+  var reply_to = function(post_id) {
+    $("#reply_to_post_id").val(post_id);
+    form = $("#edit-form").detach();
+    if (post_id == '') {
+      form.insertAfter("#pre-form");
+    } else {
+      form.insertAfter("#post-"+post_id);
+    }
+    $("#edit-form").show();
+  }
