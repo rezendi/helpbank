@@ -71,7 +71,6 @@ class VariousOtherTest < ActionDispatch::IntegrationTest
     sign_out
     sign_in @user3
     post "/posts", params: { post: { community_id:@community.id, project_id:@project.id, reply_to_post_id:@post.id, content: "This too is a reply"} }
-    
   end
   
   test "some basic index and show pages" do
@@ -98,4 +97,12 @@ class VariousOtherTest < ActionDispatch::IntegrationTest
     get "/users/#{@user.id}/check_ins"
     assert_response :success
   end
+  
+  test "some object validation" do
+    link = Link.new(name:"invalid url", url:"javascript:run('shenanigans!')")
+    assert_equal false, link.save, "Saving invalid link"
+    link.url = "http://www.example.com/"
+    assert_equal true, link.save
+  end
+    
 end
