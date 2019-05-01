@@ -3,7 +3,7 @@ The Help Bank
 
 A time bank for communities: pledge your time to community projects, get others' time to work on your private projects.
 
-See [About](http://www.helpbank.co/about) at helpbank.co for details.
+See [About](https://helpbank.herokuapp.com/about) at helpbank.herokuapp.com for details.
 
 What users can do:
   * Sign up
